@@ -88,33 +88,43 @@ const Reset = styled.button`
 
 export default class App extends Component {
   state = {
-    count: 25,
+    min: 25,
+    sec: 0,
   }
   
   handleStart = () => {
-    this.interval = setInterval(() => {
+    this.intervalMin = setInterval(() => {
       this.setState({
-        count: this.state.count - 1
+        min: this.state.min - 1
+      })
+    }, 60000)
+
+    this.intervalSec = setInterval(() => {
+      this.setState({
+        sec: 60 - 1
       })
     }, 1000)
 
   }
 
   handlePause = () => {
-    clearInterval(this.interval)
+    clearInterval(this.intervalMin)
+    clearInterval(this.intervalSec)
   }
 
   handleReset = () => {
-    if (this.state.count !== 0) {
+    if (this.state.min !== 0) {
       this.setState({
-        count: 25
+        min: 25,
+        sec: 0
       })
-    clearInterval(this.interval)
+    clearInterval(this.intervalMin)
+    clearInterval(this.intervalSec)
     }
   }
 
   render() {
-    const {count} = this.state
+    const {min, sec} = this.state
     return (
       <Container>
         <Pomodoro>
@@ -123,7 +133,8 @@ export default class App extends Component {
             <GiTomato size={110} color="#7159c1" />
           </IconPomodoro>
           <ScreenCount>
-            <span>{count}</span>
+            <span>{min}:</span>
+            <span>{sec}</span>
           </ScreenCount>
           <Buttons>
             <Start
