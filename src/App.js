@@ -97,7 +97,7 @@ export default class App extends Component {
       this.setState({
         min: this.state.min - 1
       })
-    }, 60000)
+    }, 600000)
 
     this.intervalSec = setInterval(() => {
       this.setState({
