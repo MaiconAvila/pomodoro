@@ -21,6 +21,10 @@ const Pomodoro = styled.div`
   background: #fff;
   border-radius: 5px;
   box-shadow: 0px 0px 41px -10px rgba(0,0,0,1);
+
+  @media(max-width: 490px) {
+    max-width: 350px;
+  }
 `;
 
 const IconPomodoro = styled.div`
@@ -28,12 +32,16 @@ const IconPomodoro = styled.div`
   justify-content: space-between;
   width: 60%;
   margin: 3% auto 0 auto;
+
+  @media(max-width: 490px) {
+    width: 150px;
+  }
 `;
 
 const ScreenCount = styled.div`
   width: 60%;
   height: 25vh;
-  margin: 0 auto;
+  margin: 2% auto;
   background: #666;
   border-radius: 5px;
   display: flex;
@@ -41,13 +49,21 @@ const ScreenCount = styled.div`
   font-size: 2rem;
   align-items: center;
   justify-content: center;
+
+  span {
+    font-size: 3.5rem;
+  }
 `;
 
 const Buttons = styled.div`
-  width: 60%;
+  width: 63%;
   margin: 0 auto 5% auto;
   display: flex;
   justify-content: space-between;
+
+  @media (max-width: 490px) {
+    width: 95%;
+  }
 `;
 
 const Start = styled.button`
@@ -91,40 +107,57 @@ export default class App extends Component {
     min: 25,
     sec: 0,
   }
-  
+
   handleStart = () => {
+    this.setState({
+      min: this.state.min - 1,
+    })
+
     this.intervalMin = setInterval(() => {
       this.setState({
-        min: this.state.min - 1
+        min: this.state.min - 1,
       })
-    }, 600000)
-
+    }, 60000)
+    
     this.intervalSec = setInterval(() => {
-      this.setState({
-        sec: 60 - 1
-      })
+      if (this.state.sec > 0) {
+        this.setState({
+          sec: this.state.sec - 1,
+        })
+      } else if (this.state.sec === 0) {
+        this.setState({
+          sec: 59
+        })
+      }
     }, 1000)
-
   }
 
   handlePause = () => {
     clearInterval(this.intervalMin)
+    this.handlePauseSeg()
+  }
+
+  handlePauseSeg = () => {
     clearInterval(this.intervalSec)
   }
 
   handleReset = () => {
-    if (this.state.min !== 0) {
-      this.setState({
-        min: 25,
-        sec: 0
-      })
+    this.setState({
+      min: 25,
+      sec: 0,
+    })
+
     clearInterval(this.intervalMin)
+    this.handleResetSec()
+  }
+  
+  handleResetSec = () => {
     clearInterval(this.intervalSec)
-    }
   }
 
   render() {
-    const {min, sec} = this.state
+    const {min, sec} = this.state;
+
     return (
       <Container>
         <Pomodoro>
