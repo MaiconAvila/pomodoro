@@ -46,6 +46,7 @@ const ScreenCount = styled.div`
   border-radius: 5px;
   display: flex;
   color: #fff;
+  flex-wrap: wrap;
   font-size: 2rem;
   align-items: center;
   justify-content: center;
@@ -53,6 +54,14 @@ const ScreenCount = styled.div`
   span {
     font-size: 3.5rem;
   }
+`;
+
+const Mensage = styled.div`
+  font-size: 1.5rem;
+  width: 100%;
+  padding: 0 1rem;
+  text-align: center;
+  color: red;
 `;
 
 const Buttons = styled.div`
@@ -106,38 +115,27 @@ export default class App extends Component {
   state = {
     min: 25,
     sec: 0,
+    modal: false,
   }
 
   handleStart = () => {
-    this.setState({
-      min: this.state.min - 1,
-    })
-
-    this.intervalMin = setInterval(() => {
-      this.setState({
-        min: this.state.min - 1,
-      })
-    }, 60000)
-    
+    clearInterval(this.intervalSec)
     this.intervalSec = setInterval(() => {
+      if (this.state.sec === 0 && this.state.min > 0) {
+        this.setState({
+          sec: 59,
+          min: this.state.min - 1,
+        })
+      }
       if (this.state.sec > 0) {
         this.setState({
           sec: this.state.sec - 1,
-        })
-      } else if (this.state.sec === 0) {
-        this.setState({
-          sec: 59
         })
       }
     }, 1000)
   }
 
   handlePause = () => {
-    clearInterval(this.intervalMin)
-    this.handlePauseSeg()
-  }
-
-  handlePauseSeg = () => {
     clearInterval(this.intervalSec)
   }
 
@@ -147,14 +145,9 @@ export default class App extends Component {
       sec: 0,
     })
 
-    clearInterval(this.intervalMin)
-    this.handleResetSec()
-  }
-  
-  handleResetSec = () => {
     clearInterval(this.intervalSec)
   }
-
+  
   render() {
     const {min, sec} = this.state;
 
@@ -166,8 +159,8 @@ export default class App extends Component {
             <GiTomato size={110} color="#7159c1" />
           </IconPomodoro>
           <ScreenCount>
-            <span>{min}:</span>
-            <span>{sec}</span>
+          {this.state.min === 25 && this.state.sec === 0 ? <span>25:00</span> : <span>{min}:{sec}</span>}
+          {this.state.sec === 0 && this.state.min === 0 && <Mensage>O seu pomodoro terminou</Mensage>}
           </ScreenCount>
           <Buttons>
             <Start
